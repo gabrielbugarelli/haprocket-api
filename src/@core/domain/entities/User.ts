@@ -3,7 +3,7 @@ import { Feedback } from "./Feedback";
 
 export class User extends BaseEntity {
   name: string;
-  feedbacks: Feedback[];
+  feedbacks?: Feedback[];
 
   constructor(name: string) {
     super();

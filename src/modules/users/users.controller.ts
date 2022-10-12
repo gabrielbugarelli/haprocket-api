@@ -1,17 +1,29 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, Get, Post } from '@nestjs/common';
 import { CreateUserDTO } from 'src/@core/domain/dtos/CreateUserDTO';
+import { User } from 'src/@core/domain/entities/User';
 import { CreateUserUseCase } from './use-cases/create-user.use-case';
+import { ListUsersUseCase } from './use-cases/list-users.use-case.ts';
 
 @Controller('users')
 export class UsersController {
   private readonly createUserUseCase: CreateUserUseCase;
+  private readonly listUserUseCase: ListUsersUseCase;
 
-  constructor(createUserUseCase: CreateUserUseCase) {
+  constructor(
+    createUserUseCase: CreateUserUseCase,
+    listUserUseCase: ListUsersUseCase
+  ) {
     this.createUserUseCase = createUserUseCase;
+    this.listUserUseCase = listUserUseCase;
   }
 
   @Post()
   async createUser(@Body() user: CreateUserDTO): Promise<void> {
     await this.createUserUseCase.execute(user);
+  }
+
+  @Get()
+  async listAllUsers(): Promise<User[]> {
+    return await this.listUserUseCase.execute();
   }
 }
