@@ -1,0 +1,28 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id       String     @id @unique @default(uuid())
+  name     String
+  feedback String
+  Feedback Feedback[]
+
+  @@map("users")
+}
+
+model Feedback {
+  id           String   @id @unique @default(uuid())
+  user         User     @relation(fields: [userId], references: [id])
+  description  String
+  createdAt    DateTime
+  userId       String
+  feedbackType String
+
+  @@map("feedbacks")
+}
