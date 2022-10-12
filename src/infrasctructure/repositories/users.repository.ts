@@ -1,7 +1,7 @@
-import { CreateUserDTO } from "src/@core/domain/dtos/CreateUserDTO";
-import { User } from "src/@core/domain/entities/User";
-import { IUsersRepository } from "src/@core/domain/interfaces/repositories/IUsersRepository";
-import { PrismaService } from "src/database/PrismaService";
+import { CreateUserDTO } from "src/business/domain/dtos/CreateUserDTO";
+import { User } from "src/business/domain/entities/User";
+import { IUsersRepository } from "src/business/domain/interfaces/repositories/IUsersRepository";
+import { PrismaService } from "src/infrasctructure/database/PrismaService";
 
 export class UsersRepository implements IUsersRepository {
   private readonly repository: PrismaService;

@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
-import { User } from 'src/@core/domain/entities/User';
-import { IUsersRepository } from 'src/@core/domain/interfaces/repositories/IUsersRepository';
-import { UsersRepository } from '../users.repository';
+import { User } from 'src/business/domain/entities/User';
+import { IUsersRepository } from 'src/business/domain/interfaces/repositories/IUsersRepository';
+import { UsersRepository } from '../../../infrasctructure/repositories/users.repository';
 
 @Injectable()
 export class ListUsersUseCase {
