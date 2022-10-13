@@ -1,13 +1,19 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 import { CreateFeedbackDTO } from 'src/domain/dtos/CreateFeedbackTDO';
 import { CreateFeedbackUseCase } from './use-cases/create-feedback.use-case';
+import { ListFeedbackByUserUseCase } from './use-cases/list-feedback-by-user.use-case';
 
 @Controller('feedbacks')
 export class FeedbacksController {
   private readonly createFeedbackUseCase: CreateFeedbackUseCase;
+  private readonly listFeedbacksByUserUseCase: ListFeedbackByUserUseCase;
 
-  constructor(createFeedbackUseCase: CreateFeedbackUseCase) {
+  constructor(
+    createFeedbackUseCase: CreateFeedbackUseCase,
+    listFeedbacksByUserUseCase: ListFeedbackByUserUseCase
+  ) {
     this.createFeedbackUseCase = createFeedbackUseCase;
+    this.listFeedbacksByUserUseCase = listFeedbacksByUserUseCase;
   }
 
   @Post()
@@ -15,8 +21,8 @@ export class FeedbacksController {
     await this.createFeedbackUseCase.execute(feedback);
   }
 
-  @Get()
-  ping() {
-    return "poing";
+  @Get(':userId')
+  async listFeedbackByUser(@Param("userId") userId: string) {
+    return await this.listFeedbacksByUserUseCase.execute(userId);
   }
 }

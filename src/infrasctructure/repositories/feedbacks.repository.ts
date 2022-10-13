@@ -1,5 +1,6 @@
 import { CreateFeedbackDTO } from "src/domain/dtos/CreateFeedbackTDO";
 import { Feedback } from "src/domain/entities/Feedback";
+import { FeedbackTypeEnum } from "src/domain/enums/FeedbackTypeEnum";
 import { IFeedbacksRepository } from "src/domain/interfaces/repositories/IFeedbacksRepository";
 import { PrismaService } from "../database/PrismaService";
 
@@ -37,5 +38,30 @@ export class FeedbacksRepository implements IFeedbacksRepository {
         }
       }
     });
+  }
+
+  async listFeedbacksByUser(userId: string): Promise<Feedback[]> {
+    let feedbacks: Feedback[] = [];
+
+    const result = await this.repository.feedback.findMany({
+      where: {
+        fk_id_user: userId
+      }
+    });
+
+    result.map(feedback => {
+      let feedbackResult: Feedback = {
+        id: feedback.id,
+        description: feedback.description,
+        userId: feedback.fk_id_user,
+        createdAt: feedback.createdAt,
+        feedbackType: FeedbackTypeEnum[feedback.feedbackType],
+      }
+
+      feedbacks.push(feedbackResult)
+    });
+
+
+    return feedbacks;
   }
 }
