@@ -27,7 +27,10 @@ export class UsersRepository implements IUsersRepository {
     await this.repository.user.create({
       data: {
         id: user.id,
-        name: user.name
+        name: user.name,
+        feedbacks: {
+          connect: user.feedbacks
+        }
       }
     });
   }
@@ -35,5 +38,10 @@ export class UsersRepository implements IUsersRepository {
   async listUsers(): Promise<User[]> {
     const users = await this.repository.user.findMany();
     return users;
+  }
+
+  async findUser(userId: string): Promise<User> {
+    const user = await this.repository.user.findUnique({ where: { id: userId } })
+    return user;
   }
 }

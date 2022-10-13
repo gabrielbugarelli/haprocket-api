@@ -18,11 +18,11 @@ model User {
 
 model Feedback {
   id           String   @id @unique @default(uuid())
-  user         User     @relation(fields: [userId], references: [id])
-  description  String
   createdAt    DateTime
-  userId       String
   feedbackType String
+  description  String
+  user         User     @relation(fields: [fk_id_user], references: [id])
+  fk_id_user   String
 
   @@map("feedbacks")
 }
