@@ -1,6 +1,6 @@
-import { CreateUserDTO } from "src/business/domain/dtos/CreateUserDTO";
-import { User } from "src/business/domain/entities/User";
-import { IUsersRepository } from "src/business/domain/interfaces/repositories/IUsersRepository";
+import { CreateUserDTO } from "src/domain/dtos/CreateUserDTO";
+import { User } from "src/domain/entities/User";
+import { IUsersRepository } from "src/domain/interfaces/repositories/IUsersRepository";
 import { PrismaService } from "src/infrasctructure/database/PrismaService";
 
 export class UsersRepository implements IUsersRepository {
@@ -27,7 +27,10 @@ export class UsersRepository implements IUsersRepository {
     await this.repository.user.create({
       data: {
         id: user.id,
-        name: user.name
+        name: user.name,
+        feedbacks: {
+          connect: user.feedbacks
+        }
       }
     });
   }
@@ -35,5 +38,10 @@ export class UsersRepository implements IUsersRepository {
   async listUsers(): Promise<User[]> {
     const users = await this.repository.user.findMany();
     return users;
+  }
+
+  async findUser(userId: string): Promise<User> {
+    const user = await this.repository.user.findUnique({ where: { id: userId } })
+    return user;
   }
 }
