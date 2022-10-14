@@ -44,4 +44,12 @@ export class UsersRepository implements IUsersRepository {
     const user = await this.repository.user.findUnique({ where: { id: userId } })
     return user;
   }
+
+  async delete(userId: string): Promise<void> {
+    await this.repository.user.delete({
+      where: {
+        id: userId
+      }
+    });
+  }
 }
