@@ -6,6 +6,7 @@ import { FeedbackTypeEnum } from 'src/domain/enums/FeedbackTypeEnum';
 import { CreateFeedbackUseCase } from './use-cases/create-feedback.use-case';
 import { ListAllFeedbacksByTypeUseCase } from './use-cases/list-all-feedbacks-by-type.use-case';
 import { ListAllFeedbacksUseCase } from './use-cases/list-all-feedbacks.use-case';
+import { ListFeedbackByIdUseCase } from './use-cases/list-feedback-by-id.use-case';
 import { ListFeedbackByUserUseCase } from './use-cases/list-feedback-by-user.use-case';
 
 @ApiTags('feedbacks')
@@ -15,17 +16,20 @@ export class FeedbacksController {
   private readonly listFeedbacksByUserUseCase: ListFeedbackByUserUseCase;
   private readonly listAllFeedbacksUseCase: ListAllFeedbacksUseCase;
   private readonly listAllFeedbacksByTypeUseCase: ListAllFeedbacksByTypeUseCase;
+  private readonly listFeedbackByIdUseCase: ListFeedbackByIdUseCase;
 
   constructor(
     createFeedbackUseCase: CreateFeedbackUseCase,
     listFeedbacksByUserUseCase: ListFeedbackByUserUseCase,
     listAllFeedbacksUseCase: ListAllFeedbacksUseCase,
-    listAllFeedbacksByTypeUseCase: ListAllFeedbacksByTypeUseCase
+    listAllFeedbacksByTypeUseCase: ListAllFeedbacksByTypeUseCase,
+    listFeedbackByIdUseCase: ListFeedbackByIdUseCase
   ) {
     this.createFeedbackUseCase = createFeedbackUseCase;
     this.listFeedbacksByUserUseCase = listFeedbacksByUserUseCase;
     this.listAllFeedbacksUseCase = listAllFeedbacksUseCase;
     this.listAllFeedbacksByTypeUseCase = listAllFeedbacksByTypeUseCase;
+    this.listFeedbackByIdUseCase = listFeedbackByIdUseCase;
   }
 
   @Post()
@@ -47,4 +51,10 @@ export class FeedbacksController {
   async listAllFeedbacksByType(@Param("feedbackType") feedbackType: FeedbackTypeEnum): Promise<Feedback[]> {
     return await this.listAllFeedbacksByTypeUseCase.execute(feedbackType);
   }
+
+  @Get(':id')
+  async listFeedbackById(@Param('id') id: string): Promise<Feedback> {
+    return await this.listFeedbackByIdUseCase.execute(id);
+  }
+
 }

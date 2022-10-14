@@ -71,4 +71,21 @@ export class FeedbacksRepository implements IFeedbacksRepository {
     const feedbacks = handleFeedbackData(result);
     return feedbacks;
   }
+
+  async listFeedbackById(id: string): Promise<Feedback> {
+    const result = await this.repository.feedback.findUnique({
+      where: { id }
+    })
+
+    let feedback: Feedback = {
+      description: result?.description,
+      feedbackType: FeedbackTypeEnum[result?.feedbackType],
+      userId: result?.fkIdUser,
+      userName: result?.userName,
+      id: result?.id,
+      createdAt: result?.createdAt
+    }
+
+    return feedback;
+  }
 }
