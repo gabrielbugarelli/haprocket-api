@@ -17,9 +17,9 @@ export class CreateFeedbackUseCase {
 
   async execute(createFeedbackDTO: CreateFeedbackDTO) {
     const { userId } = createFeedbackDTO;
-    const userExists = this.usersRepository.findUser(userId);
+    const userExists = await this.usersRepository.findUser(userId);
 
-    if (!userExists) {
+    if (userExists?.id === undefined) {
       throw new NotFoundException("User does not exists");
     }
 

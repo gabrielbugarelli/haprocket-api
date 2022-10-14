@@ -7,4 +7,5 @@ export interface IFeedbacksRepository {
   listFeedbacksByUser(userId: string): Promise<Feedback[]>;
   listAllFeedbacks(): Promise<Feedback[]>;
   listAllFeedbacksByType(feedbackType: FeedbackTypeEnum): Promise<Feedback[]>;
+  listFeedbackById(id: string): Promise<Feedback>;
 }

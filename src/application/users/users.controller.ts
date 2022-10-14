@@ -1,5 +1,5 @@
 import { Body, Controller, Delete, Get, HttpStatus, Param, Post, Response } from '@nestjs/common';
-import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
+import { ApiTags } from '@nestjs/swagger';
 import { CreateUserDTO } from 'src/domain/dtos/CreateUserDTO';
 import { User } from 'src/domain/entities/User';
 import { CreateUserUseCase } from './use-cases/create-user.use-case';
