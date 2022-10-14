@@ -13,6 +13,11 @@ export class CreateFeedbackDTO {
   @IsString()
   @IsNotEmpty()
   @ApiProperty()
+  userName: string;
+
+  @IsString()
+  @IsNotEmpty()
+  @ApiProperty()
   description: string;
 
   @IsNotEmpty()

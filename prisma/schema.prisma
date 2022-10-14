@@ -21,8 +21,9 @@ model Feedback {
   createdAt    DateTime
   feedbackType String
   description  String
-  user         User     @relation(fields: [fk_id_user], references: [id])
-  fk_id_user   String
+  user         User     @relation(fields: [fkIdUser], references: [id])
+  fkIdUser     String
+  userName     String
 
   @@map("feedbacks")
 }

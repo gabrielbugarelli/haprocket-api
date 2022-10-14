@@ -23,7 +23,8 @@ export class FeedbacksRepository implements IFeedbacksRepository {
   }
 
   async create(createFeedbackDTO: CreateFeedbackDTO): Promise<void> {
-    const feedback = new Feedback(createFeedbackDTO.description, createFeedbackDTO.feedbackType, createFeedbackDTO.userId);
+    const { description, feedbackType, userId, userName } = createFeedbackDTO;
+    const feedback = new Feedback(description, feedbackType, userId, userName);
 
     await this.repository.feedback.create({
       data: {
@@ -31,6 +32,7 @@ export class FeedbacksRepository implements IFeedbacksRepository {
         createdAt: feedback.createdAt,
         description: feedback.description,
         feedbackType: String(feedback.feedbackType),
+        userName: feedback.userName,
         user: {
           connect: {
             id: feedback.userId
@@ -45,7 +47,7 @@ export class FeedbacksRepository implements IFeedbacksRepository {
 
     const result = await this.repository.feedback.findMany({
       where: {
-        fk_id_user: userId
+        fkIdUser: userId
       }
     });
 
@@ -53,7 +55,8 @@ export class FeedbacksRepository implements IFeedbacksRepository {
       let feedbackResult: Feedback = {
         id: feedback.id,
         description: feedback.description,
-        userId: feedback.fk_id_user,
+        userId: feedback.fkIdUser,
+        userName: feedback.userName,
         createdAt: feedback.createdAt,
         feedbackType: FeedbackTypeEnum[feedback.feedbackType],
       }
@@ -61,6 +64,27 @@ export class FeedbacksRepository implements IFeedbacksRepository {
       feedbacks.push(feedbackResult)
     });
 
+
+    return feedbacks;
+  }
+
+  async listAllFeedbacks(): Promise<Feedback[]> {
+    let feedbacks: Feedback[] = [];
+
+    const result = await this.repository.feedback.findMany();
+
+    result.map(feedback => {
+      let feedbackResult: Feedback = {
+        id: feedback.id,
+        description: feedback.description,
+        userId: feedback.fkIdUser,
+        userName: feedback.userName,
+        createdAt: feedback.createdAt,
+        feedbackType: FeedbackTypeEnum[feedback.feedbackType],
+      }
+
+      feedbacks.push(feedbackResult)
+    });
 
     return feedbacks;
   }
