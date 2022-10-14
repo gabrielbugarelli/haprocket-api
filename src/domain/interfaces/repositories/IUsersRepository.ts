@@ -5,4 +5,5 @@ export interface IUsersRepository {
   create(createUserDTO: CreateUserDTO): Promise<void>;
   listUsers(): Promise<User[]>;
   findUser(userId: string): Promise<User>;
+  delete(userId: string): Promise<void>;
 }

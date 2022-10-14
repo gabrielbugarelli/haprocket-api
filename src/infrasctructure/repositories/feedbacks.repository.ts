@@ -3,6 +3,7 @@ import { Feedback } from "src/domain/entities/Feedback";
 import { FeedbackTypeEnum } from "src/domain/enums/FeedbackTypeEnum";
 import { IFeedbacksRepository } from "src/domain/interfaces/repositories/IFeedbacksRepository";
 import { PrismaService } from "../database/PrismaService";
+import { handleFeedbackData } from "../utils/handlFeedbackData";
 
 export class FeedbacksRepository implements IFeedbacksRepository {
   private readonly repository: PrismaService;
@@ -23,7 +24,8 @@ export class FeedbacksRepository implements IFeedbacksRepository {
   }
 
   async create(createFeedbackDTO: CreateFeedbackDTO): Promise<void> {
-    const feedback = new Feedback(createFeedbackDTO.description, createFeedbackDTO.feedbackType, createFeedbackDTO.userId);
+    const { description, feedbackType, userId, userName } = createFeedbackDTO;
+    const feedback = new Feedback(description, feedbackType, userId, userName);
 
     await this.repository.feedback.create({
       data: {
@@ -31,6 +33,7 @@ export class FeedbacksRepository implements IFeedbacksRepository {
         createdAt: feedback.createdAt,
         description: feedback.description,
         feedbackType: String(feedback.feedbackType),
+        userName: feedback.userName,
         user: {
           connect: {
             id: feedback.userId
@@ -41,27 +44,48 @@ export class FeedbacksRepository implements IFeedbacksRepository {
   }
 
   async listFeedbacksByUser(userId: string): Promise<Feedback[]> {
-    let feedbacks: Feedback[] = [];
-
     const result = await this.repository.feedback.findMany({
       where: {
-        fk_id_user: userId
+        fkIdUser: userId
       }
     });
 
-    result.map(feedback => {
-      let feedbackResult: Feedback = {
-        id: feedback.id,
-        description: feedback.description,
-        userId: feedback.fk_id_user,
-        createdAt: feedback.createdAt,
-        feedbackType: FeedbackTypeEnum[feedback.feedbackType],
-      }
-
-      feedbacks.push(feedbackResult)
-    });
-
-
+    const feedbacks = handleFeedbackData(result);
     return feedbacks;
+  }
+
+  async listAllFeedbacks(): Promise<Feedback[]> {
+    const result = await this.repository.feedback.findMany();
+
+    const feedbacks = handleFeedbackData(result);
+    return feedbacks;
+  }
+
+  async listAllFeedbacksByType(feedbackType: FeedbackTypeEnum): Promise<Feedback[]> {
+    const result = await this.repository.feedback.findMany({
+      where: {
+        feedbackType: feedbackType
+      }
+    });
+
+    const feedbacks = handleFeedbackData(result);
+    return feedbacks;
+  }
+
+  async listFeedbackById(id: string): Promise<Feedback> {
+    const result = await this.repository.feedback.findUnique({
+      where: { id }
+    })
+
+    let feedback: Feedback = {
+      description: result?.description,
+      feedbackType: FeedbackTypeEnum[result?.feedbackType],
+      userId: result?.fkIdUser,
+      userName: result?.userName,
+      id: result?.id,
+      createdAt: result?.createdAt
+    }
+
+    return feedback;
   }
 }
