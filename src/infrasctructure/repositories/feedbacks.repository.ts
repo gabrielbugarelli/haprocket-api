@@ -3,6 +3,7 @@ import { Feedback } from "src/domain/entities/Feedback";
 import { FeedbackTypeEnum } from "src/domain/enums/FeedbackTypeEnum";
 import { IFeedbacksRepository } from "src/domain/interfaces/repositories/IFeedbacksRepository";
 import { PrismaService } from "../database/PrismaService";
+import { handleFeedbackData } from "../utils/handlFeedbackData";
 
 export class FeedbacksRepository implements IFeedbacksRepository {
   private readonly repository: PrismaService;
@@ -43,49 +44,31 @@ export class FeedbacksRepository implements IFeedbacksRepository {
   }
 
   async listFeedbacksByUser(userId: string): Promise<Feedback[]> {
-    let feedbacks: Feedback[] = [];
-
     const result = await this.repository.feedback.findMany({
       where: {
         fkIdUser: userId
       }
     });
 
-    result.map(feedback => {
-      let feedbackResult: Feedback = {
-        id: feedback.id,
-        description: feedback.description,
-        userId: feedback.fkIdUser,
-        userName: feedback.userName,
-        createdAt: feedback.createdAt,
-        feedbackType: FeedbackTypeEnum[feedback.feedbackType],
-      }
-
-      feedbacks.push(feedbackResult)
-    });
-
-
+    const feedbacks = handleFeedbackData(result);
     return feedbacks;
   }
 
   async listAllFeedbacks(): Promise<Feedback[]> {
-    let feedbacks: Feedback[] = [];
-
     const result = await this.repository.feedback.findMany();
 
-    result.map(feedback => {
-      let feedbackResult: Feedback = {
-        id: feedback.id,
-        description: feedback.description,
-        userId: feedback.fkIdUser,
-        userName: feedback.userName,
-        createdAt: feedback.createdAt,
-        feedbackType: FeedbackTypeEnum[feedback.feedbackType],
-      }
+    const feedbacks = handleFeedbackData(result);
+    return feedbacks;
+  }
 
-      feedbacks.push(feedbackResult)
+  async listAllFeedbacksByType(feedbackType: FeedbackTypeEnum): Promise<Feedback[]> {
+    const result = await this.repository.feedback.findMany({
+      where: {
+        feedbackType: feedbackType
+      }
     });
 
+    const feedbacks = handleFeedbackData(result);
     return feedbacks;
   }
 }
