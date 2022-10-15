@@ -8,4 +8,5 @@ export interface IFeedbacksRepository {
   listAllFeedbacks(): Promise<Feedback[]>;
   listAllFeedbacksByType(feedbackType: FeedbackTypeEnum): Promise<Feedback[]>;
   listFeedbackById(id: string): Promise<Feedback>;
+  deleteFeedback(id: string): Promise<void>;
 }

@@ -29,6 +29,7 @@ A WEB API to send feedback to other people.
 - Prisma ORM
 - Prisma Client
 - SQLite
+- Postgres
 
 ### Good Practices and Patterns
 - Clean Architecture
