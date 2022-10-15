@@ -1,9 +1,10 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpCode, Param, Post } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { CreateFeedbackDTO } from 'src/domain/dtos/CreateFeedbackTDO';
 import { Feedback } from 'src/domain/entities/Feedback';
 import { FeedbackTypeEnum } from 'src/domain/enums/FeedbackTypeEnum';
 import { CreateFeedbackUseCase } from './use-cases/create-feedback.use-case';
+import { DeleteFeedbackUseCase } from './use-cases/delete-feedback.use-case';
 import { ListAllFeedbacksByTypeUseCase } from './use-cases/list-all-feedbacks-by-type.use-case';
 import { ListAllFeedbacksUseCase } from './use-cases/list-all-feedbacks.use-case';
 import { ListFeedbackByIdUseCase } from './use-cases/list-feedback-by-id.use-case';
@@ -17,19 +18,22 @@ export class FeedbacksController {
   private readonly listAllFeedbacksUseCase: ListAllFeedbacksUseCase;
   private readonly listAllFeedbacksByTypeUseCase: ListAllFeedbacksByTypeUseCase;
   private readonly listFeedbackByIdUseCase: ListFeedbackByIdUseCase;
+  private readonly deleteFeedbackUseCase: DeleteFeedbackUseCase;
 
   constructor(
     createFeedbackUseCase: CreateFeedbackUseCase,
     listFeedbacksByUserUseCase: ListFeedbackByUserUseCase,
     listAllFeedbacksUseCase: ListAllFeedbacksUseCase,
     listAllFeedbacksByTypeUseCase: ListAllFeedbacksByTypeUseCase,
-    listFeedbackByIdUseCase: ListFeedbackByIdUseCase
+    listFeedbackByIdUseCase: ListFeedbackByIdUseCase,
+    deleteFeedbackUseCase: DeleteFeedbackUseCase
   ) {
     this.createFeedbackUseCase = createFeedbackUseCase;
     this.listFeedbacksByUserUseCase = listFeedbacksByUserUseCase;
     this.listAllFeedbacksUseCase = listAllFeedbacksUseCase;
     this.listAllFeedbacksByTypeUseCase = listAllFeedbacksByTypeUseCase;
     this.listFeedbackByIdUseCase = listFeedbackByIdUseCase;
+    this.deleteFeedbackUseCase = deleteFeedbackUseCase
   }
 
   @Post()
@@ -57,4 +61,11 @@ export class FeedbacksController {
     return await this.listFeedbackByIdUseCase.execute(id);
   }
 
+  @Delete(':id')
+  @HttpCode(200)
+  async deleteFeedback(@Param('id') id: string): Promise<string> {
+    await this.deleteFeedbackUseCase.execute(id);
+
+    return 'Feedback deleted with success';
+  }
 }

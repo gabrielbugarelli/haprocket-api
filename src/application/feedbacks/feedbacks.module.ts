@@ -5,9 +5,10 @@ import { ListFeedbackByUserUseCase } from './use-cases/list-feedback-by-user.use
 import { ListAllFeedbacksUseCase } from './use-cases/list-all-feedbacks.use-case';
 import { ListAllFeedbacksByTypeUseCase } from './use-cases/list-all-feedbacks-by-type.use-case';
 import { ListFeedbackByIdUseCase } from './use-cases/list-feedback-by-id.use-case';
+import { DeleteFeedbackUseCase } from './use-cases/delete-feedback.use-case';
 
 @Module({
-  providers: [CreateFeedbackUseCase, ListFeedbackByUserUseCase, ListAllFeedbacksUseCase, ListAllFeedbacksByTypeUseCase, ListFeedbackByIdUseCase],
+  providers: [CreateFeedbackUseCase, ListFeedbackByUserUseCase, ListAllFeedbacksUseCase, ListAllFeedbacksByTypeUseCase, ListFeedbackByIdUseCase, DeleteFeedbackUseCase],
   controllers: [FeedbacksController],
 })
 export class FeedbacksModule { }

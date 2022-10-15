@@ -88,4 +88,10 @@ export class FeedbacksRepository implements IFeedbacksRepository {
 
     return feedback;
   }
+
+  async deleteFeedback(id: string): Promise<void> {
+    await this.repository.feedback.delete({
+      where: { id }
+    })
+  }
 }
